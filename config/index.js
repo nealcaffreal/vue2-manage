@@ -1,6 +1,6 @@
 /*
  * @Author: yangming
- * @LastEditTime: 2022-09-06 18:24:15
+ * @LastEditTime: 2022-09-06 21:25:16
  * @Description: 
  */
 // see http://vuejs-templates.github.io/webpack for documentation.
@@ -48,7 +48,8 @@ module.exports = {
       '/admin',
       '/statis',
       '/img',
-      '/student'
+      '/student',
+      '/school'
     ],
     // CSS Sourcemaps off by default because relative paths are "buggy"
     // with this option, according to the CSS-Loader README

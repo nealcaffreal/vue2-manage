@@ -1,6 +1,6 @@
 <!--
  * @Author: yangming
- * @LastEditTime: 2022-09-06 11:27:35
+ * @LastEditTime: 2022-09-06 21:27:51
  * @Description: 
 -->
 <template>
@@ -44,6 +44,10 @@
 					<el-submenu index="8">
 						<template slot="title"><i class="el-icon-warning"></i>学生</template>
 						<el-menu-item index="student">学生列表</el-menu-item>
+					</el-submenu>
+					<el-submenu index="8">
+						<template slot="title"><i class="el-icon-warning"></i>学校</template>
+						<el-menu-item index="school">学校列表</el-menu-item>
 					</el-submenu>
 				</el-menu>
 			</el-col>

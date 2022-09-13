@@ -1,6 +1,6 @@
 <!--
  * @Author: yangming
- * @LastEditTime: 2022-09-06 11:17:41
+ * @LastEditTime: 2022-09-06 20:46:53
  * @Description: 
 -->
 <template>
@@ -13,6 +13,8 @@
         <el-table-column prop="age" label="年龄" width="220">
         </el-table-column>
         <el-table-column prop="sex" label="性别" width="180">
+        </el-table-column>
+        <el-table-column prop="hobby" label="爱好" width="180">
         </el-table-column>
       </el-table>
       <div class="Pagination" style="text-align: left;margin-top: 10px;">
@@ -63,6 +65,7 @@ export default {
               name: item.name,
               age: item.age,
               sex: item.sex,
+              hobby: item.hobby
             }
             this.tableData.push(tableItem)
           })

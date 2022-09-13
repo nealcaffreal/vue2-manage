@@ -240,4 +240,29 @@ export const getUserCity = () => fetch('/v1/user/city/count');
  * 获取用户列表
  */
 
-export const getStudentList = data => fetch('/student/student', data);
+export const getStudentList = data => fetch('/student/list', data);
+
+
+/**
+ * 获取学校列表
+ */
+
+export const getSchoolList = data => fetch('/school/list', data);
+
+/**
+ * 新增学校
+ */
+
+export const addSchool = data => fetch('/school/add', data, 'POST');
+
+
+/**
+ * 修改学校
+ */
+export const updateSchool = data => fetch('/school/update', data, 'POST');
+
+
+/**
+* 删除学校
+*/
+export const deleteSchool = school_id => fetch('/school/delete/' + school_id, {}, 'DELETE');

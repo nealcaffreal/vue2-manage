@@ -21,6 +21,7 @@ const adminSet = r => require.ensure([], () => r(require('@/page/adminSet')), 'a
 const sendMessage = r => require.ensure([], () => r(require('@/page/sendMessage')), 'sendMessage');
 const explain = r => require.ensure([], () => r(require('@/page/explain')), 'explain');
 const student = r => require.ensure([], () => r(require('@/page/student')), 'student');
+const school = r => require.ensure([], () => r(require('@/page/school')), 'school');
 //学生列表
 const routes = [
 	{
@@ -95,6 +96,10 @@ const routes = [
 			path: '/student',
 			component: student,
 			meta: ['学生', '学生列表'],
+		},{
+			path: '/school',
+			component: school,
+			meta: ['班级', '班级列表']
 		}]
 	}
 ]

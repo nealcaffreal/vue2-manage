@@ -1,6 +1,6 @@
 <!--
  * @Author: yangming
- * @LastEditTime: 2022-09-13 22:02:17
+ * @LastEditTime: 2022-09-13 23:11:14
  * @Description: 
 -->
 <template>
@@ -15,7 +15,7 @@
           height: 60px;
         "
       >
-        <el-button size="mini" type="success" @click="dialogVisible = true"
+        <el-button size="mini" type="success" @click="dialogVisible = true;isAdd = true"
           >添加学校</el-button
         >
       </div>
@@ -67,7 +67,7 @@
 
 <script>
 import headTop from "../components/headTop";
-import { getSchoolList,addSchool,deleteSchool } from "@/api/getData";
+import { getSchoolList,addSchool,updateSchool,deleteSchool } from "@/api/getData";
 export default {
   data() {
     return {
@@ -82,6 +82,8 @@ export default {
         school_name: "",
         school_des: ''
       },
+      school_id: 1,
+      isAdd: true
     };
   },
   components: {
@@ -101,13 +103,28 @@ export default {
         throw new Error(res.message);
       }
     },
+    async updateSchoolHttp(id) {
+      const res = await updateSchool({id,...this.form})
+      if (res.status == 1) {
+        this.dialogVisible = false;
+        this.$refs['form'].resetFields();
+        this.getSchool();
+      } else {
+        throw new Error(res.message);
+      }
+    },
     async deleteSchoolHttp(id) {
       const res = await deleteSchool(id)
       if(res.status == 1) {
         this.getSchool();
       }
     },
-    handleEdit() {},
+    handleEdit(index,row) {
+      this.dialogVisible = true
+      this.isAdd = false
+      this.form = row
+      this.school_id = row.id
+    },
     handleDelete(index,{ id }) {
       this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
           confirmButtonText: '确定',
@@ -127,7 +144,11 @@ export default {
         });
     },
     onSubmit() {
-      this.addSchoolHttp()
+      if(this.isAdd) {
+        this.addSchoolHttp()
+      }else {
+        this.updateSchoolHttp({id:this.school_id,...this.form})
+      }
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);

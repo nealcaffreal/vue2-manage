@@ -1,31 +1,48 @@
 <!--
  * @Author: yangming
- * @LastEditTime: 2022-09-13 23:11:14
+ * @LastEditTime: 2022-09-14 16:06:04
  * @Description: 
 -->
 <template>
   <div class="fillcontain">
     <head-top></head-top>
     <div class="table_container">
-      <div
-        style="
+      <div style="
           display: flex;
           flex-direction: row-reverse;
           align-items: center;
           height: 60px;
-        "
-      >
-        <el-button size="mini" type="success" @click="dialogVisible = true;isAdd = true"
-          >添加学校</el-button
-        >
+        ">
+        <el-button type="primary" @click="handleAdd">新增</el-button>
       </div>
-      <el-dialog title="提示" :visible.sync="dialogVisible" size="tiny">
+      <el-dialog :title="title" :visible.sync="dialogVisible" size="tiny">
         <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="班级名称">
+          <el-form-item label="省内排名">
+            <el-input v-model="form.province_rank"></el-input>
+          </el-form-item>
+          <el-form-item label="院校">
             <el-input v-model="form.school_name"></el-input>
           </el-form-item>
-          <el-form-item label="班级描述">
+          <el-form-item label="类型">
+            <el-select v-model="form.school_type_id" placeholder="请选择类型" style="width:100%;">
+              <el-option v-for="item in schoolTypeList" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="所在地">
+            <el-input v-model="form.school_address"></el-input>
+          </el-form-item>
+          <el-form-item label="性质">
+            <el-input v-model="form.school_property"></el-input>
+          </el-form-item>
+          <el-form-item label="层次">
+            <el-input v-model="form.school_level"></el-input>
+          </el-form-item>
+          <el-form-item label="学校描述">
             <el-input v-model="form.school_des"></el-input>
+          </el-form-item>
+          <el-form-item label="全国排名">
+            <el-input v-model="form.nationwide_rank"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -34,31 +51,25 @@
         </el-form>
       </el-dialog>
       <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="school_name" label="班级"> </el-table-column>
-        <el-table-column prop="school_des" label="描述"></el-table-column>
+        <el-table-column prop="province_rank" label="省内排名"> </el-table-column>
+        <el-table-column prop="school_name" label="院校"></el-table-column>
+        <el-table-column prop="school_type_name" label="类型"> </el-table-column>
+        <el-table-column prop="school_address" label="所在地"></el-table-column>
+        <el-table-column prop="school_property" label="性质"> </el-table-column>
+        <el-table-column prop="school_level" label="层次"></el-table-column>
+        <el-table-column prop="school_des" label="学校描述"> </el-table-column>
+        <el-table-column prop="nationwide_rank" label="全国排名"> </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >编辑</el-button
-            >
-            <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
-            >
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div class="Pagination" style="text-align: left; margin-top: 10px">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-size="20"
-          layout="total, prev, pager, next"
-          :total="count"
-        >
+      <div class="Pagination" style="text-align: right; margin-top: 10px">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+          :page-sizes="[10, 20, 30, 40]" :page-size="10" layout="total, sizes, prev, pager, next, jumper"
+          :total="count">
         </el-pagination>
       </div>
     </div>
@@ -67,23 +78,32 @@
 
 <script>
 import headTop from "../components/headTop";
-import { getSchoolList,addSchool,updateSchool,deleteSchool } from "@/api/getData";
+import { getSchoolList, getSchoolTypeList, addSchool, updateSchool, deleteSchool } from "@/api/getData";
 export default {
   data() {
     return {
       tableData: [],
       currentRow: null,
       offset: 0,
-      limit: 20,
+      limit: 10,
       count: 0,
       currentPage: 1,
       dialogVisible: false,
       form: {
+        province_rank: '',
         school_name: "",
-        school_des: ''
+        school_type_name: "",
+        school_type_id: '',
+        school_address: '',
+        school_property: '',
+        school_level: '',
+        school_des: '',
+        nationwide_rank: ''
       },
       school_id: 1,
-      isAdd: true
+      isAdd: true,
+      title: '新增学校',
+      schoolTypeList: [],
     };
   },
   components: {
@@ -91,8 +111,24 @@ export default {
   },
   created() {
     this.getSchool();
+    this.getSchoolTypeListHttp()
   },
   methods: {
+    async getSchoolTypeListHttp() {
+      try {
+        const res = await getSchoolTypeList({
+          offset: 0,
+          limit: 1000,
+        });
+        if (res.status == 1) {
+          this.schoolTypeList = res.data;
+        } else {
+          throw new Error(res.message);
+        }
+      } catch (err) {
+        console.log("获取数据失败", err);
+      }
+    },
     async addSchoolHttp() {
       const res = await addSchool(this.form)
       if (res.status == 1) {
@@ -104,7 +140,7 @@ export default {
       }
     },
     async updateSchoolHttp(id) {
-      const res = await updateSchool({id,...this.form})
+      const res = await updateSchool({ id, ...this.form })
       if (res.status == 1) {
         this.dialogVisible = false;
         this.$refs['form'].resetFields();
@@ -115,39 +151,49 @@ export default {
     },
     async deleteSchoolHttp(id) {
       const res = await deleteSchool(id)
-      if(res.status == 1) {
+      if (res.status == 1) {
         this.getSchool();
       }
     },
-    handleEdit(index,row) {
-      this.dialogVisible = true
-      this.isAdd = false
-      this.form = row
-      this.school_id = row.id
+    handleAdd() {
+      this.dialogVisible = true;
+      this.title = '新增学校';
+      this.isAdd = true;
+      this.$nextTick(() => {
+        this.form.school_name = ''
+        this.form.school_des = ''
+      })
     },
-    handleDelete(index,{ id }) {
+    handleEdit(index, row) {
+      this.dialogVisible = true;
+      this.title = '修改学校';
+      this.isAdd = false;
+      this.form = row;
+      this.school_id = row.id;
+    },
+    handleDelete(index, { id }) {
       this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.deleteSchoolHttp(id)
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
-          });          
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.deleteSchoolHttp(id)
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
         });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
     },
     onSubmit() {
-      if(this.isAdd) {
+      if (this.isAdd) {
         this.addSchoolHttp()
-      }else {
-        this.updateSchoolHttp({id:this.school_id,...this.form})
+      } else {
+        this.updateSchoolHttp({ id: this.school_id, ...this.form })
       }
     },
     handleSizeChange(val) {
@@ -166,7 +212,7 @@ export default {
         });
         if (res.status == 1) {
           this.tableData = res.data;
-          this.total = res.total;
+          this.count = res.total;
         } else {
           throw new Error(res.message);
         }

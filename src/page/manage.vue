@@ -1,6 +1,6 @@
 <!--
  * @Author: yangming
- * @LastEditTime: 2022-09-06 21:27:51
+ * @LastEditTime: 2022-09-14 11:13:50
  * @Description: 
 -->
 <template>
@@ -48,6 +48,7 @@
 					<el-submenu index="8">
 						<template slot="title"><i class="el-icon-warning"></i>学校</template>
 						<el-menu-item index="school">学校列表</el-menu-item>
+						<el-menu-item index="schoolType">学校类型</el-menu-item>
 					</el-submenu>
 				</el-menu>
 			</el-col>

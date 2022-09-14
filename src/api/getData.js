@@ -266,3 +266,27 @@ export const updateSchool = data => fetch('/school/update', data, 'POST');
 * 删除学校
 */
 export const deleteSchool = school_id => fetch('/school/delete/' + school_id, {}, 'DELETE');
+
+/**
+ * 获取学校类型
+ */
+
+export const getSchoolTypeList = data => fetch('/school/type/list', data);
+
+/**
+ * 新增学校类型
+ */
+
+export const addSchoolType = data => fetch('/school/type/add', data, 'POST');
+
+
+/**
+ * 修改学校类型
+ */
+export const updateSchoolType = data => fetch('/school/type/update', data, 'POST');
+
+
+/**
+* 删除学校类型
+*/
+export const deleteSchoolType = id => fetch('/school/type/delete/' + id, {}, 'DELETE');

@@ -1,6 +1,6 @@
 <!--
  * @Author: yangming
- * @LastEditTime: 2022-09-14 11:13:50
+ * @LastEditTime: 2022-09-14 22:03:01
  * @Description: 
 -->
 <template>
@@ -41,14 +41,15 @@
 						<template slot="title"><i class="el-icon-warning"></i>说明</template>
 						<el-menu-item index="explain">说明</el-menu-item>
 					</el-submenu>
-					<el-submenu index="8">
+					<!-- <el-submenu index="8">
 						<template slot="title"><i class="el-icon-warning"></i>学生</template>
 						<el-menu-item index="student">学生列表</el-menu-item>
-					</el-submenu>
+					</el-submenu> -->
 					<el-submenu index="8">
 						<template slot="title"><i class="el-icon-warning"></i>学校</template>
 						<el-menu-item index="school">学校列表</el-menu-item>
 						<el-menu-item index="schoolType">学校类型</el-menu-item>
+						<el-menu-item index="schoolLevel">学校层次</el-menu-item>
 					</el-submenu>
 				</el-menu>
 			</el-col>

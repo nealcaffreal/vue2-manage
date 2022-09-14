@@ -243,6 +243,9 @@ export const getUserCity = () => fetch('/v1/user/city/count');
 export const getStudentList = data => fetch('/student/list', data);
 
 
+
+
+
 /**
  * 获取学校列表
  */
@@ -267,6 +270,10 @@ export const updateSchool = data => fetch('/school/update', data, 'POST');
 */
 export const deleteSchool = school_id => fetch('/school/delete/' + school_id, {}, 'DELETE');
 
+
+
+
+
 /**
  * 获取学校类型
  */
@@ -290,3 +297,29 @@ export const updateSchoolType = data => fetch('/school/type/update', data, 'POST
 * 删除学校类型
 */
 export const deleteSchoolType = id => fetch('/school/type/delete/' + id, {}, 'DELETE');
+
+
+
+/**
+ * 获取学校类型
+ */
+
+export const getSchoolLevelList = data => fetch('/school/level/list', data);
+
+/**
+ * 新增学校类型
+ */
+
+export const addSchoolLevel = data => fetch('/school/level/add', data, 'POST');
+
+
+/**
+ * 修改学校类型
+ */
+export const updateSchoolLevel = data => fetch('/school/level/update', data, 'POST');
+
+
+/**
+* 删除学校类型
+*/
+export const deleteSchoolLevel = id => fetch('/school/level/delete/' + id, {}, 'DELETE');

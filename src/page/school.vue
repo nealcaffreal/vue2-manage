@@ -1,6 +1,6 @@
 <!--
  * @Author: yangming
- * @LastEditTime: 2022-09-14 16:06:04
+ * @LastEditTime: 2022-09-14 22:25:41
  * @Description: 
 -->
 <template>
@@ -18,7 +18,7 @@
       <el-dialog :title="title" :visible.sync="dialogVisible" size="tiny">
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="省内排名">
-            <el-input v-model="form.province_rank"></el-input>
+            <el-input-number v-model="form.province_rank"  :min="1" :max="100"></el-input-number>
           </el-form-item>
           <el-form-item label="院校">
             <el-input v-model="form.school_name"></el-input>
@@ -36,13 +36,17 @@
             <el-input v-model="form.school_property"></el-input>
           </el-form-item>
           <el-form-item label="层次">
-            <el-input v-model="form.school_level"></el-input>
+            {{form.school_level}}
+            <el-select multiple  v-model="form.school_level" placeholder="请选择层次" style="width:100%;">
+              <el-option v-for="item in schoolLevelList" :key="item.id" :label="item.name" :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
-          <el-form-item label="学校描述">
+          <!-- <el-form-item label="学校描述">
             <el-input v-model="form.school_des"></el-input>
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item label="全国排名">
-            <el-input v-model="form.nationwide_rank"></el-input>
+            <el-input-number v-model="form.nationwide_rank"  :min="1" :max="100"></el-input-number>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -57,7 +61,7 @@
         <el-table-column prop="school_address" label="所在地"></el-table-column>
         <el-table-column prop="school_property" label="性质"> </el-table-column>
         <el-table-column prop="school_level" label="层次"></el-table-column>
-        <el-table-column prop="school_des" label="学校描述"> </el-table-column>
+        <!-- <el-table-column prop="school_des" label="学校描述"> </el-table-column> -->
         <el-table-column prop="nationwide_rank" label="全国排名"> </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -78,7 +82,7 @@
 
 <script>
 import headTop from "../components/headTop";
-import { getSchoolList, getSchoolTypeList, addSchool, updateSchool, deleteSchool } from "@/api/getData";
+import { getSchoolList, getSchoolTypeList,getSchoolLevelList, addSchool, updateSchool, deleteSchool } from "@/api/getData";
 export default {
   data() {
     return {
@@ -90,20 +94,21 @@ export default {
       currentPage: 1,
       dialogVisible: false,
       form: {
-        province_rank: '',
+        province_rank: 0,
         school_name: "",
         school_type_name: "",
         school_type_id: '',
         school_address: '',
         school_property: '',
-        school_level: '',
+        school_level: [],
         school_des: '',
-        nationwide_rank: ''
+        nationwide_rank: 0
       },
       school_id: 1,
       isAdd: true,
       title: '新增学校',
       schoolTypeList: [],
+      schoolLevelList: [],
     };
   },
   components: {
@@ -112,8 +117,24 @@ export default {
   created() {
     this.getSchool();
     this.getSchoolTypeListHttp()
+    this.getSchoolLevelListHttp()
   },
   methods: {
+    async getSchoolLevelListHttp() {
+      try {
+        const res = await getSchoolLevelList({
+          offset: 0,
+          limit: 1000,
+        });
+        if (res.status == 1) {
+          this.schoolLevelList = res.data;
+        } else {
+          throw new Error(res.message);
+        }
+      } catch (err) {
+        console.log("获取数据失败", err);
+      }
+    },
     async getSchoolTypeListHttp() {
       try {
         const res = await getSchoolTypeList({

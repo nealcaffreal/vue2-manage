@@ -1,6 +1,6 @@
 <!--
  * @Author: yangming
- * @LastEditTime: 2022-09-14 22:25:41
+ * @LastEditTime: 2022-09-15 14:55:56
  * @Description: 
 -->
 <template>
@@ -18,7 +18,7 @@
       <el-dialog :title="title" :visible.sync="dialogVisible" size="tiny">
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="省内排名">
-            <el-input-number v-model="form.province_rank"  :min="1" :max="100"></el-input-number>
+            <el-input-number v-model="form.province_rank"  :min="1" :max="100" style="width:100%;"></el-input-number>
           </el-form-item>
           <el-form-item label="院校">
             <el-input v-model="form.school_name"></el-input>
@@ -36,19 +36,15 @@
             <el-input v-model="form.school_property"></el-input>
           </el-form-item>
           <el-form-item label="层次">
-            {{form.school_level}}
             <el-select multiple  v-model="form.school_level" placeholder="请选择层次" style="width:100%;">
               <el-option v-for="item in schoolLevelList" :key="item.id" :label="item.name" :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
-          <!-- <el-form-item label="学校描述">
-            <el-input v-model="form.school_des"></el-input>
-          </el-form-item> -->
           <el-form-item label="全国排名">
-            <el-input-number v-model="form.nationwide_rank"  :min="1" :max="100"></el-input-number>
+            <el-input-number v-model="form.nationwide_rank"  :min="1" :max="100" style="width:100%;"></el-input-number>
           </el-form-item>
-          <el-form-item>
+          <el-form-item style="display: flex;align-items: center;justify-content: center;margin-left: -80px;">
             <el-button type="primary" @click="onSubmit">提交</el-button>
             <el-button>取消</el-button>
           </el-form-item>
@@ -60,8 +56,11 @@
         <el-table-column prop="school_type_name" label="类型"> </el-table-column>
         <el-table-column prop="school_address" label="所在地"></el-table-column>
         <el-table-column prop="school_property" label="性质"> </el-table-column>
-        <el-table-column prop="school_level" label="层次"></el-table-column>
-        <!-- <el-table-column prop="school_des" label="学校描述"> </el-table-column> -->
+        <el-table-column prop="school_level" label="层次">
+          <template slot-scope="scope">
+            <el-tag type="success" :key="item.id" v-for="item in scope.row.school_level" style="margin-left: 6px;">{{item.name}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="nationwide_rank" label="全国排名"> </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -183,6 +182,12 @@ export default {
       this.$nextTick(() => {
         this.form.school_name = ''
         this.form.school_des = ''
+        this.form.province_rank = ''
+        this.form.school_type_id = ""
+        this.form.school_address = ""
+        this.form.school_property = ""
+        this.form.school_level = []
+        this.form.nationwide_rank = ''
       })
     },
     handleEdit(index, row) {
